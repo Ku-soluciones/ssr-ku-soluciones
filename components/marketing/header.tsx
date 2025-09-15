@@ -1,72 +1,181 @@
 "use client"
 
-import Link from "next/link"
-import { useState } from "react"
-import { Menu, X } from "lucide-react"
+import { useState, useEffect } from "react"
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
-  const navigation = [
-    { name: "Inicio", href: "/" },
-    { name: "Servicios", href: "/servicios" },
-    { name: "Portafolio", href: "/portafolio" },
-    { name: "Blog", href: "/blog" },
-    { name: "Contacto", href: "/contacto" },
-  ]
+  useEffect(() => {
+    // Check if user has a preference saved
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true)
+      document.documentElement.classList.add('dark')
+    }
+  }, [])
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode)
+    if (!isDarkMode) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
+  }
+  
   return (
-    <header className="bg-white shadow-sm">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900">
-              KU Soluciones
-            </Link>
+    <>
+      {/* Spacer */}
+      <div style={{ height: '80px' }}></div>
+      
+      {/* Header con estilos inline para asegurar que funcione */}
+      <header 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '80px',
+          backgroundColor: isDarkMode ? '#1f1f1f' : '#ffffff',
+          borderBottom: isDarkMode ? '2px solid #333' : '2px solid #f5f5f5',
+          boxShadow: isDarkMode ? '0 4px 20px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.08)',
+          zIndex: 1000,
+          transition: 'all 0.3s ease'
+        }}
+      >
+        <div 
+          style={{
+            maxWidth: '1200px',
+            margin: '0 auto',
+            padding: '0 20px',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          {/* Logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img 
+              src="/images/logo5.png"
+              alt="KU Soluciones Logo"
+              style={{
+                width: '50px',
+                height: '50px',
+                objectFit: 'contain'
+              }}
+            />
+            <div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', color: isDarkMode ? '#e5e5e5' : '#2c3e50' }}>
+                Kü Soluciones
+              </div>
+              <div style={{ fontSize: '12px', color: isDarkMode ? '#999' : '#7f8c8d' }}>
+                Innovación Digital
+              </div>
+            </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
+          {/* Navigation */}
+          <nav style={{ display: 'flex', gap: '30px' }}>
+            <a href="/" style={{ color: '#E74C3C', fontWeight: '600', textDecoration: 'none' }}>
+              Inicio
+            </a>
+            <a href="/servicios" style={{ color: isDarkMode ? '#e5e5e5' : '#2c3e50', fontWeight: '500', textDecoration: 'none' }}>
+              Servicios
+            </a>
+            <a href="/proyectos" style={{ color: isDarkMode ? '#e5e5e5' : '#2c3e50', fontWeight: '500', textDecoration: 'none' }}>
+              Proyectos
+            </a>
+            <a href="/nosotros" style={{ color: isDarkMode ? '#e5e5e5' : '#2c3e50', fontWeight: '500', textDecoration: 'none' }}>
+              Nosotros
+            </a>
+            <a href="/contacto" style={{ color: isDarkMode ? '#e5e5e5' : '#2c3e50', fontWeight: '500', textDecoration: 'none' }}>
+              Contacto
+            </a>
+          </nav>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          {/* CTA Buttons and Theme Toggle */}
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            {/* Dark Mode Toggle */}
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              onClick={toggleDarkMode}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '8px',
+                border: isDarkMode ? '1px solid #444' : '1px solid #e5e5e5',
+                backgroundColor: isDarkMode ? '#2c3e50' : '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              aria-label="Toggle dark mode"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isDarkMode ? (
+                // Sun icon for light mode
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              ) : (
+                // Moon icon for dark mode
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              )}
+            </button>
+
+            <button
+              onMouseEnter={() => setHoveredButton('cotizar')}
+              onMouseLeave={() => setHoveredButton(null)}
+              style={{
+                padding: '10px 24px',
+                border: '2px solid #E74C3C',
+                borderRadius: '8px',
+                backgroundColor: hoveredButton === 'cotizar' ? '#E74C3C' : 'transparent',
+                color: hoveredButton === 'cotizar' ? 'white' : '#E74C3C',
+                fontWeight: '600',
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Cotizar Proyecto
+            </button>
+            <button
+              onMouseEnter={() => setHoveredButton('agendar')}
+              onMouseLeave={() => setHoveredButton(null)}
+              style={{
+                padding: '10px 24px',
+                border: 'none',
+                borderRadius: '8px',
+                backgroundColor: hoveredButton === 'agendar' ? '#C0392B' : '#E74C3C',
+                color: 'white',
+                fontWeight: '600',
+                fontSize: '14px',
+                cursor: 'pointer',
+                boxShadow: hoveredButton === 'agendar' ? '0 6px 20px rgba(231, 76, 60, 0.4)' : '0 4px 10px rgba(231, 76, 60, 0.3)',
+                transform: hoveredButton === 'agendar' ? 'translateY(-2px)' : 'translateY(0)',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Agendar Reunión
             </button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
-    </header>
+      </header>
+    </>
   )
 }

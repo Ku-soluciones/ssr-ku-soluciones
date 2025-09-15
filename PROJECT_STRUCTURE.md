@@ -108,9 +108,9 @@ Los siguientes directorios/archivos están en `.gitignore`:
 
 ## Estado del Proyecto
 
-✅ Estructura configurada correctamente
-✅ TypeScript configurado
-✅ ESLint sin errores
-✅ Build exitoso
-✅ Optimización de imágenes con Next/Image
-✅ `.gitignore` configurado correctamente
+- Estructura configurada correctamente
+- TypeScript configurado
+- ESLint sin errores
+- Build exitoso
+- Optimización de imágenes con Next/Image
+- `.gitignore` configurado correctamente
